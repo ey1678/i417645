@@ -1,3 +1,5 @@
+name: ""
+title: null
 lsi: false
 safe: true
 source: main
@@ -8,5 +10,4 @@ gist:
 kramdown:
   math_engine: mathjax
   syntax_highlighter: rouge
-name: ""
-title: null
+
