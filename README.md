@@ -51,7 +51,7 @@ Here is a snippet of what each dataframe looks like. We can see that the syntax 
 
 Now lets compare how long it took to actually load the data.
 ![LoadingSpeed](docs/assets/loading.PNG)
-We can see an impressive reduction (> 11x faster) in load times. This is likely due to the parallelized nature of Polars along with the performance benefits of Apache Arrow. We can expect this gap to further increase in larger machines with higher core counts, and potentially for larger datasets. 
+We can see an impressive reduction (> 11x faster) in load times. This is likely due to the parallelized nature of Polars along with the performance benefits of Apache Arrow. We can expect this gap to further increase in larger machines with higher core counts (though there may be diminishing returns), and potentially for larger datasets. 
 
 ## Groupby
 Here we experiment with a very common operation: the groupby and aggregate. We group by the user_id and aggregate the movieids into a list. I expect to see a signficant improvement in speed because groupby is one of the most expensive operations that can be parallelized, so Polars should have the most room for improvement here.
