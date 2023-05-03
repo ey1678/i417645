@@ -36,4 +36,7 @@ So why is this a great application for Polars?
 * This is a single machine problem. Distributed platforms don't make sense here because of the additional overhead.
 * Speed is important. The data cleaning and processing pipeline is not triggered often, but the service may be degraded during this time due to compute constraints. This is a tradeoff we need to design for: Pandas is slow but single-threaded. If we can isolate hardware for this task, it may be reasonable to just use Pandas. However, without isolation, the tradeoff is between how much compute resources are being consumed for the data processing and the time needed to complete the process. Depending how much faster Polars is over Pandas, it may be worth it to let the recommendation service become completely unresponsive for a very short period of time rather than have a degraded but somewhat functional service for a much longer period.
 
-So lets explore how much faster Polars is over Pandas using an example subset of our data from the project. [Here](https://drive.google.com/drive/folders/1w8wVvfMfeQ1X1ewOX5SM4OWlwGTn_5Pb?usp=share_link) is the link to the notebook and data we will be using. We'll be using only e
+So lets explore how much faster Polars is over Pandas using an example subset of our data from the project. [Here](https://drive.google.com/drive/folders/1L5WDMKdReS68_w2xWKLZtKMxPF6w1I2E?usp=share_link) is the link to the notebook and data we will be using. We will explore the differences in speed using eager execution and a few common operations. 
+
+## Loading both Libraries
+Installing and using both Pandas and Polars is extremely simple. 
