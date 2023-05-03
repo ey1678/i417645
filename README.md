@@ -40,3 +40,7 @@ So lets explore how much faster Polars is over Pandas using an example subset of
 
 ## Loading both Libraries
 Installing and using both Pandas and Polars is extremely simple. 
+![Installation](docs/assets/install.PNG)
+
+## Loading Dataset 
+Here we load a snippet of our dataset from the project called 'train.csv'. This is a collection of ratings from the Kafka stream with some processing partial already completed. There are 2,485,196 rows and we will be importing 4 columns: 'user_id', 'movieid', 'rating_timestamp', and 'rating'. 
