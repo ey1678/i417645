@@ -54,4 +54,11 @@ Now lets compare how long it took to actually load the data.
 We can see an impressive reduction (> 11x faster) in load times. This is due to the parallelized nature of Polars. We can expect this gap to further increase in larger machines with higher core counts. 
 
 ## Groupby
-Here we experiment with a very common operation: the groupby and aggregate. We group by the user_id and aggregate the movieids into a list. 
+Here we experiment with a very common operation: the groupby and aggregate. We group by the user_id and aggregate the movieids into a list. I expect to see a signficant improvement in speed because groupby is one of the most expensive operations that can be parallelized, so Polars should have the most room for improvement here.
+![LoadingSpeed](docs/assets/groupby.PNG)
+The results do not disappoint. Polars achieves an over 50x speed up compared to Pandas. One important difference between the two output is that Pandas preserves the order of rows, while Polars does not. That is why I added the additional sort operation to the Polars line. 
+
+## Sorting
+Let's try another common Dataframe operation: sorting. Here we try a simple sort by rating_timestamp because there may be issues with the order in which the raw data was read processed into the csv. 
+![Sort](docs/assets/sort.PNG)
+Again, Polars achieves a significant (~10x) speed up relative to Pandas with just a minor change to the syntax. 
