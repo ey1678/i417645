@@ -33,10 +33,10 @@ So we can see that Polars solves many of the problems we discussed in the first 
 The recommender system project used in class is actually a great application for Polars. In this project, each group is given a stream of data through Kakfa providing information on what movies users are watching and ratings data. This raw stream data is then processed into a format suitable for training a machine learning model. This trained model is then deployed as a application as a movie recommender system. Each group is given a VM with 4 vCPUs and 16GB of system memory. 
 
 So why is this a great application for Polars?
-* This is a single machine problem. Distributed platforms don't make sense here because of the additional overhead.
+* This is a single machine problem. Distributed platforms add additional overhead for little to no return.
 * Speed is important. The data cleaning and processing pipeline is not triggered often, but the service may be degraded during this time due to compute constraints. This is a tradeoff we need to design for: Pandas is slow but single-threaded. If we can isolate hardware for this task, it may be reasonable to just use Pandas. However, without isolation, the tradeoff is between how much compute resources are being consumed for the data processing and the time needed to complete the process. Depending how much faster Polars is over Pandas, it may be worth it to let the recommendation service become completely unresponsive for a very short period of time rather than have a degraded but somewhat functional service for a much longer period.
 
-So lets explore how much faster Polars is over Pandas using an example subset of our data from the project. [Here](https://drive.google.com/drive/folders/1L5WDMKdReS68_w2xWKLZtKMxPF6w1I2E?usp=share_link) is the link to the notebook and data we will be using. We will explore the differences in speed using eager execution and a few common operations. 
+So lets explore how much faster Polars is over Pandas using an example subset of our data from the project. [Here](https://drive.google.com/drive/folders/1L5WDMKdReS68_w2xWKLZtKMxPF6w1I2E?usp=share_link) is the link to the notebook and data we will be using. We will explore the differences in speed using eager execution and a few common operations. For reference, this comparison was completed on my laptop with an Intel i9-12900H CPU.
 
 ## Loading both Libraries
 Installing and using both Pandas and Polars is extremely simple. 
@@ -44,3 +44,14 @@ Installing and using both Pandas and Polars is extremely simple.
 
 ## Loading Dataset 
 Here we load a snippet of our dataset from the project called 'train.csv'. This is a collection of ratings from the Kafka stream with some processing partial already completed. There are 2,485,196 rows and we will be importing 4 columns: 'user_id', 'movieid', 'rating_timestamp', and 'rating'. 
+
+![Dataframes](docs/assets/dataframes.PNG)
+
+Here is a snippet of what each dataframe looks like. We can see that the syntax for the two libraries are very similar. However, there is a subtle but very significant difference in the actual dataframe images. Polars does not have row indexing. This might be quite surprising if you're coming from Pandas, but the developers believe indexing adds needless complexity and introduces more errors for little upside. Frankly, I tend to agree with the Polars developers as I find Pandas indices more troublesome than useful, and often lead me to write poorly optimized code. You can read more about their explanation [here](https://pola-rs.github.io/polars-book/user-guide/migration/pandas/#differences-in-concepts-between-polars-and-pandas). If your Pandas pipeline uses a lot of row-wise indexing operations, you may need significant modifications when switching over to Polars.
+
+Now lets compare how long it took to actually load the data.
+![LoadingSpeed](docs/assets/loading.PNG)
+We can see an impressive reduction (> 11x faster) in load times. This is due to the parallelized nature of Polars. We can expect this gap to further increase in larger machines with higher core counts. 
+
+## Groupby
+Here we experiment with a very common operation: the groupby and aggregate. We group by the user_id and aggregate the movieids into a list. 
